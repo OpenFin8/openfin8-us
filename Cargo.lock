@@ -678,8 +678,8 @@ dependencies = [
 
 [[package]]
 name = "bank8-open-core"
-version = "0.2.2"
-source = "git+https://github.com/Bank8-dev/bank8-open-core?tag=bank8-v0.2.2#3262a77a73a8a90e47ce6b8baf6f7c414e6b62ff"
+version = "0.2.3"
+source = "git+https://github.com/Bank8-dev/bank8-open-core?tag=bank8-v0.2.3#3da6e5a1d7c17fe66088d7bfe8af30d191a9d96d"
 dependencies = [
  "anyhow",
  "async-trait",
