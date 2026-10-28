@@ -1,4 +1,4 @@
-# Bank8:OpenUS - README
+# OpenFin8:US - README
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Built with Rust](https://img.shields.io/badge/Built%20with%20Rust-orange.svg)](https://www.rust-lang.org/)
@@ -9,14 +9,14 @@ US open banking (FDX v6.x): consent-managed account data sharing
 between a bank (data provider) and registered third-party data
 recipients - plus the money-movement read/cancel surface, event
 notifications, and the hosted consent UI. The in-place successor of
-Bank8:FDX.
+OpenFin8:US.
 
 ## Summary
 
-Bank8:OpenUS is a Rust service that plays the FDX **data provider**
+OpenFin8:US is a Rust service that plays the FDX **data provider**
 role for the US market: it serves consented account/transaction/
 statement data to registered recipients over the `/fdx/v{major}/*`
-API (the major segment from the configured `BANK8_OPEN_US_VERSION`),
+API (the major segment from the configured `OPENFIN8_US_VERSION`),
 enforces consent on every request with CSDF data minimization, and
 serves the recipient-side surfaces (`/v1/recipient/*`) used by
 eFinTech-style apps and the platform-hosted consent RFW screens.
@@ -26,7 +26,7 @@ server (DCR, RFC 7591), and each institution keeps its own consent
 records - the bank its grant ledger, the fintech its connection
 registry (the two-ledger model).
 
-The service embeds [`bank8-open-core`](../bank8-open-core) - the
+The service embeds [`openfin8-core`](../openfin8-core) - the
 jurisdiction-agnostic kernel (OBARCH-1) - and supplies the US FDX
 profile, the FDX ceremony (DCR + PAR + PKCE + DPoP), and the FDX
 provider router. The Canadian and UK adapters
@@ -55,13 +55,13 @@ under gitignored `specs/fdx/{version}/` (see
 
 ```mermaid
 graph TD
-    subgraph "bank8-open-us"
+    subgraph "openfin8-us"
         PROF["UsProfile<br/>(FDX 6.x descriptor)"]
         CER["FDX Ceremony impl<br/>(DCR + PAR + PKCE + DPoP)"]
         WIRE["FDX provider router<br/>/fdx/v6/*"]
         REG["US registration data<br/>(policy sets, gates)"]
     end
-    CORE["bank8-open-core<br/>(consent ledger · registry · CSDF · notify)"]
+    CORE["openfin8-core<br/>(consent ledger · registry · CSDF · notify)"]
     AUTH["Sentin8:Auth<br/>(DPoP profile)"]
     LEDGER["Bank8:Ledger"]
     PAY["Bank8:Payments"]
@@ -92,7 +92,7 @@ make build    # cargo build
 make test     # cargo test
 make lint     # cargo fmt -- --check
 make start    # infra + trimmed boot if captain is down
-make status   # fleet rows for bank8:open-us
+make status   # fleet rows for openfin8:us
 make enroll   # register this repo (composable enrollment, RS §6)
 ```
 
@@ -103,5 +103,5 @@ model is platform-wide - read [SECURITY.md](SECURITY.md).
 
 ---
 
-**Architecture & Design:** bank8:open-us and its underlying concepts
+**Architecture & Design:** openfin8:us and its underlying concepts
 were designed by [Hamid Jahanzad](https://www.linkedin.com/in/hamidjahanzad/).

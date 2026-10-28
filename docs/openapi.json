@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "bank8-open-us",
-    "description": "Sentin8 Bank8:OpenUS - US open-banking data provider (FDX v6.x wire): consent-checked data sharing, the in-place successor of bank8-fdx.",
+    "title": "openfin8-us",
+    "description": "Sentin8 OpenFin8:US - US open-banking data provider (FDX v6.x wire): consent-checked data sharing, the in-place successor of bank8-fdx.",
     "license": {
       "name": "MIT OR Apache-2.0",
       "identifier": "MIT OR Apache-2.0"
@@ -4735,8 +4735,8 @@
       "description": "Shield policy administration (shared surface)"
     },
     {
-      "name": "open-us",
-      "description": "Bank8:OpenUS - open banking, FDX v6.5 provider/recipient"
+      "name": "openfin8-us",
+      "description": "OpenFin8:US - open banking, FDX v6.5 provider/recipient"
     }
   ]
 }

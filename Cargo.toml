@@ -1,30 +1,30 @@
 # SPDX-FileCopyrightText: Copyright Logically Magic Inc. <hello@logicallymagic.com>
 # SPDX-FileCopyrightText: Copyright Hamid Jahanzad <Hamid@Jahanzad.com>
-# SPDX-FileCopyrightText: Copyright Contributors to the Bank8:OpenUS
+# SPDX-FileCopyrightText: Copyright Contributors to the OpenFin8:US
 # SPDX-License-Identifier: Apache-2.0
 
 [package]
-name = "bank8-open-us"
+name = "openfin8-us"
 version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/Bank8-dev/bank8-open-us"
+repository = "https://github.com/OpenFin8/openfin8-us"
 rust-version = "1.85"
-description = "Sentin8 Bank8:OpenUS - US open-banking data provider (FDX v6.x wire): consent-checked data sharing, the in-place successor of bank8-fdx."
+description = "Sentin8 OpenFin8:US - US open-banking data provider (FDX v6.x wire): consent-checked data sharing, the in-place successor of bank8-fdx."
 
 [[bin]]
-name = "bank8-open-us"
+name = "openfin8-us"
 path = "src/main.rs"
 
 [lib]
-name = "bank8_open_us_server"
+name = "openfin8_us_server"
 path = "src/lib.rs"
 
 [dependencies]
 # Platform SDK pin (RS 2.3) - the only cross-repo dependency.
 sentin8 = { git = "https://github.com/Sentin8/sentin8-sdk", tag = "sdk-v0.6.7" }
 # The open-banking kernel (OBARCH-1): the entire shared implementation.
-bank8-open-core = { git = "https://github.com/Bank8-dev/bank8-open-core", tag = "bank8-v0.2.3" }
+openfin8-core = { git = "https://github.com/OpenFin8/openfin8-core", tag = "openfin8-v0.1.0" }
 # bank8 namespace facade pin.
 bank8 = { git = "https://github.com/Bank8-dev/bank8-sdk", tag = "bank8-v0.5.8" }
 

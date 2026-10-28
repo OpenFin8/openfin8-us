@@ -1,10 +1,10 @@
-# bank8-open-us - Detailed Design Document
+# openfin8-us - Detailed Design Document
 
 > Status: **PROPOSED** - the FDX data-provider service for the United
 > States (OBARCH-3). This is the in-place successor of `bank8-fdx`
 > (design docs `bank8-fdx/DESIGN.md` remain the historical reference;
 > where this document says "unchanged", the fdx behavior carries
-> forward). Depends on: `bank8-open-core` (OBARCH-1) for the consent
+> forward). Depends on: `openfin8-core` (OBARCH-1) for the consent
 > ledger, recipient registry, CSDF, notifications, and admin
 > framework. See also `bank8-open-ca` (the Canadian FDX/CDX profile of
 > the same wire) and `bank8-open-uk`.
@@ -12,27 +12,27 @@
 ## 1. Scope & Context
 
 **What this service is.** The US open-banking data provider
-(`service_type: bank8:open-us`, binary `bank8-open-us`): it serves
+(`service_type: openfin8:us`, binary `openfin8-us`): it serves
 consented account, transaction, statement, and customer data to
 registered third-party data recipients over the **FDX v6.x wire**
 (`/fdx/v{major}/*`), enforces consent on every request with CSDF
 data minimization, and serves the recipient-side connection surfaces
-used by eFinTech-style apps. It embeds `bank8-open-core` and supplies
+used by eFinTech-style apps. It embeds `openfin8-core` and supplies
 exactly three things: the FDX profile descriptor, the FDX ceremony
 implementation, and the FDX provider router.
 
 **The rename, concretely** (all shipped as one atomic change):
 
-| Today (bank8-fdx) | After (bank8-open-us) |
+| Today (bank8-fdx) | After (openfin8-us) |
 |---|---|
-| `service_type: bank8:fdx` | `service_type: bank8:open-us` |
-| env prefix `BANK8_FDX_*` | `BANK8_OPEN_US_*` |
-| schema `fdx` | schema `open_us` (SQL data migration) |
-| event family `fdx` → `bank8:fdx:*` | `bank8:open-us:*` |
+| `service_type: bank8:fdx` | `service_type: openfin8:us` |
+| env prefix `BANK8_FDX_*` | `OPENFIN8_US_*` |
+| schema `fdx` | schema `openfin8_us` (SQL data migration) |
+| event family `fdx` → `bank8:fdx:*` | `openfin8:us:*` |
 | stream family `fdx` | `open-us` |
-| subdomain `bank8-fdx` | `bank8-open-us` |
+| subdomain `bank8-fdx` | `openfin8-us` |
 | telemetry property | slug `open-us` |
-| Shield gates `bank8:fdx:...` | `bank8:open-us:...` |
+| Shield gates `bank8:fdx:...` | `openfin8:us:...` |
 
 The two-ledger model, the grant-ledger seeding from
 `sentin8:auth:grant:created`, the DCR-at-consent-start recipient
@@ -43,7 +43,7 @@ remain normative for this service.
 **What changes beyond the rename** (the OBARCH-2/3 deltas):
 
 1. **Version configurability** - the six hardcoded `v6`/`"6.5"`
-   strings become `BANK8_OPEN_US_VERSION`-driven (default `6.5`):
+   strings become `OPENFIN8_US_VERSION`-driven (default `6.5`):
    route mounts (`/fdx/v{major}/...`), `validation.rs`'s route
    contract (via `profile.route_contract()`), the capability +
    certification-metrics announcements, the admin settings
@@ -62,7 +62,7 @@ remain normative for this service.
 3. **Core extraction** - the standard-agnostic modules
    (grant ledger, recipient registry, CSDF engine, notification
    worker, admin pages, audit, Flow step profile) move to
-   `bank8-open-core`; this service keeps the FDX wire handlers
+   `openfin8-core`; this service keeps the FDX wire handlers
    (`handlers.rs` provider halves, `money_movement.rs`, `pip.rs`,
    `recurring.rs`, `payment_networks.rs`, `statement_download.rs`,
    `tax.rs`, `operations.rs`), the FDX contract table, and the FDX
@@ -70,13 +70,13 @@ remain normative for this service.
 
 ```mermaid
 graph TD
-    subgraph bank8["bank8-open-us (binary)"]
+    subgraph bank8["openfin8-us (binary)"]
         PROF["UsProfile<br/>(FDX 6.x descriptor)"]
         CER["Fdx Ceremony impl<br/>(DCR + PAR + PKCE + DPoP)"]
         WIRE["FDX provider router<br/>/fdx/v6/*"]
         REG["US registration data<br/>(policy sets, gates)"]
     end
-    CORE["bank8-open-core"]
+    CORE["openfin8-core"]
     subgraph platform
         AUTH["Sentin8:Auth<br/>(DPoP profile)"]
         BUS["Sentin8:Bus"]
@@ -88,7 +88,7 @@ graph TD
     CER --> AUTH
     WIRE -->|"consented reads"| LEDGER
     WIRE -->|"initiation"| PAY
-    CORE -->|"events: bank8:open-us:*"| BUS
+    CORE -->|"events: openfin8:us:*"| BUS
 ```
 
 ## 2. FDX Profile Descriptor
@@ -96,7 +96,7 @@ graph TD
 ```rust
 /// The US FDX profile - supplied to core at build_state.
 pub struct UsProfile {
-    /// From BANK8_OPEN_US_VERSION (default "6.5"); also
+    /// From OPENFIN8_US_VERSION (default "6.5"); also
     /// overridable per-env via sys.services.config.
     version: String,
 }
@@ -165,9 +165,9 @@ profile config), defaulting to the configured one.
 
 ## 5. Data Model
 
-Schema `open_us` (renamed from `fdx`): the 15 core tables move to
-`bank8-open-core` SQL (OBARCH-1 §3) parameterized by schema; the fdx
-→ open_us migration is a schema rename + the column generalizations
+Schema `openfin8_us` (renamed from `fdx`): the 15 core tables move to
+`openfin8-core` SQL (OBARCH-1 §3) parameterized by schema; the fdx
+→ openfin8_us migration is a schema rename + the column generalizations
 (`fdx_version` → `standard_version`). No US-specific tables are
 added. The `consents.intent_payload` column stays NULL for FDX
 consents (FDX has no intent document between creation and grant).
@@ -175,15 +175,15 @@ consents (FDX has no intent document between creation and grant).
 ## 6. Registration & Configuration
 
 - `service-registration.json` (vertical bank8): service_type
-  `bank8:open-us`, subdomain `bank8-open-us`; policy sets/gates
-  renamed from `bank8:fdx:*` to `bank8:open-us:*`; the consent
+  `openfin8:us`, subdomain `openfin8-us`; policy sets/gates
+  renamed from `bank8:fdx:*` to `openfin8:us:*`; the consent
   provider/flow entries (OAuth profile flags at Auth) unchanged in
   shape.
-- `catalog.json`: binary `bank8-open-us`, database env var
-  `BANK8_OPEN_US_DATABASE_URL`.
-- Env: `BANK8_OPEN_US_PORT`, `BANK8_OPEN_US_DATABASE_URL`,
-  `BANK8_OPEN_US_BASE_URL`, `BANK8_OPEN_US_VERSION`,
-  `BANK8_OPEN_US_STREAM_FAMILY` (default `open-us`), plus the
+- `catalog.json`: binary `openfin8-us`, database env var
+  `OPENFIN8_US_DATABASE_URL`.
+- Env: `OPENFIN8_US_PORT`, `OPENFIN8_US_DATABASE_URL`,
+  `OPENFIN8_US_BASE_URL`, `OPENFIN8_US_VERSION`,
+  `OPENFIN8_US_STREAM_FAMILY` (default `open-us`), plus the
   platform-standard variables. Per-env overrides ride
   `sys.services.config` (OBARCH-1 §6 precedence).
 
@@ -226,5 +226,5 @@ contract derive from `FDX_ROUTES` data instead of inline arrays.
 
 ---
 
-**Architecture & Design:** bank8:open-us and its underlying concepts were
+**Architecture & Design:** openfin8:us and its underlying concepts were
 designed by [Hamid Jahanzad](https://www.linkedin.com/in/hamidjahanzad/).

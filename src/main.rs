@@ -1,21 +1,21 @@
 // SPDX-FileCopyrightText: Copyright Logically Magic Inc. <hello@logicallymagic.com>
 // SPDX-FileCopyrightText: Copyright Hamid Jahanzad <Hamid@Jahanzad.com>
-// SPDX-FileCopyrightText: Copyright Contributors to the Bank8:OpenUS
+// SPDX-FileCopyrightText: Copyright Contributors to the OpenFin8:US
 // SPDX-License-Identifier: Apache-2.0
 
-//! Sentin8 Bank8:OpenUS - US open banking: the FDX v6.x
+//! Sentin8 OpenFin8:US - US open banking: the FDX v6.x
 //! provider/recipient wire. See `DESIGN.md` (OBARCH-3). This service
-//! is the in-place successor of `bank8-fdx`.
+//! is the in-place successor of the retired bank8-fdx service.
 //!
 //! This is a THIN COUNTRY ADAPTER (the design's no-fork guarantee):
-//! the entire implementation lives in `bank8-open-core`, shared
-//! byte-for-byte with `bank8-open-ca`. This binary contributes
+//! the entire implementation lives in `openfin8-core`, shared
+//! byte-for-byte with `openfin8-ca`. This binary contributes
 //! exactly three things: the US
-//! [`Profile`](bank8_open_core::profile::Profile) (jurisdiction
-//! identity, scope vocabulary, schema `open_us`, version from
-//! `BANK8_OPEN_US_VERSION`), its registration data
+//! [`Profile`](openfin8_core::profile::Profile) (jurisdiction
+//! identity, scope vocabulary, schema `openfin8_us`, version from
+//! `OPENFIN8_US_VERSION`), its registration data
 //! (`registration.rs`), and its published-spec policy (`openapi.rs` -
-//! bank8-owned routes only; the FDX API specification is licensed and
+//! OpenFin8-owned routes only; the FDX API specification is licensed and
 //! never published here, OBARCH-2).
 
 use utoipa::OpenApi;
@@ -23,8 +23,8 @@ use utoipa::OpenApi;
 mod openapi;
 mod registration;
 
-use bank8_open_core::profile::Profile;
-use bank8_open_core::server;
+use openfin8_core::profile::Profile;
+use openfin8_core::server;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
