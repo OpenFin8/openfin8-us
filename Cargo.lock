@@ -678,46 +678,19 @@ dependencies = [
 
 [[package]]
 name = "bank8-open-core"
-version = "0.1.0"
-source = "git+https://github.com/Bank8-dev/bank8-open-core?tag=bank8-v0.1.0#d29682307ee161cee04e8f524b251e8a60e278d7"
+version = "0.2.2"
+source = "git+https://github.com/Bank8-dev/bank8-open-core?tag=bank8-v0.2.2#3262a77a73a8a90e47ce6b8baf6f7c414e6b62ff"
 dependencies = [
  "anyhow",
  "async-trait",
  "axum",
  "bank8",
  "chrono",
- "jsonwebtoken",
- "reqwest 0.12.28",
- "sentin8",
- "serde",
- "serde_json",
- "sha2 0.10.9",
- "sqlx",
- "thiserror 1.0.69",
- "tokio",
- "tower",
- "tower-http 0.7.1",
- "tracing",
- "utoipa",
- "uuid",
-]
-
-[[package]]
-name = "bank8-open-us"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "axum",
- "bank8",
- "bank8-open-core",
- "chrono",
  "dotenvy",
  "futures-util",
  "hyper",
  "jsonwebtoken",
  "reqwest 0.12.28",
- "rustls",
- "rustls-graviola",
  "sentin8",
  "sentin8-secrets-sdk",
  "serde",
@@ -730,6 +703,26 @@ dependencies = [
  "tower-http 0.7.1",
  "tracing",
  "tracing-subscriber",
+ "utoipa",
+ "uuid",
+]
+
+[[package]]
+name = "bank8-open-us"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "axum",
+ "bank8",
+ "bank8-open-core",
+ "chrono",
+ "sentin8",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "tracing",
  "utoipa",
  "uuid",
 ]
