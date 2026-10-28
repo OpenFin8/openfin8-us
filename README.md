@@ -99,7 +99,7 @@ make enroll   # register this repo (composable enrollment, RS §6)
 ## Contributing & License
 
 Apache-2.0 (see [LICENSE](https://github.com/OpenFin8/openfin8-us/blob/main/LICENSE), [NOTICE](https://github.com/OpenFin8/openfin8-us/blob/main/NOTICE)). The security
-model is platform-wide - read [SECURITY.md](SECURITY.md).
+model is platform-wide - read [SECURITY.md](https://github.com/OpenFin8/openfin8-us/blob/main/SECURITY.md).
 
 ---
 
