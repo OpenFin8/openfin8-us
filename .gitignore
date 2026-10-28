@@ -1,0 +1,15 @@
+# Build artifacts
+/target
+
+# Local environment (never commit secrets/DSNs)
+/.env
+
+# sqlx offline cache is COMMITTED (.sqlx/) — consumer builds run offline.
+# Cargo.lock is COMMITTED — reproducible pins for a binary/service repo.
+
+# Licensed standard specifications - NEVER commit (OBARCH-2).
+# FDX API spec is licensed under the FDX API License Agreement,
+# distributed exclusively by FDX; customers supply it themselves.
+# See specs/README.md.
+/specs/*
+!/specs/README.md

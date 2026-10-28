@@ -1,0 +1,12 @@
+{
+  "vertical": "bank8",
+  "services": [
+    {
+      "service_type": "bank8:open-us",
+      "telemetry_property": {
+        "slug": "open-us",
+        "name": "Bank8:OpenUS Telemetry"
+      }
+    }
+  ]
+}
