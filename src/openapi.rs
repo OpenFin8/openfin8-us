@@ -29,14 +29,11 @@ use utoipa::OpenApi;
 The FDX API specification is licensed by FDX and is not published \
 here; customers supply it under specs/fdx/{version}/ (see \
 specs/README.md).",
-        license(
-            name = "MIT OR Apache-2.0",
-            identifier = "MIT OR Apache-2.0"
-        ),
+        license(name = "MIT OR Apache-2.0", identifier = "MIT OR Apache-2.0"),
         version = "0.1.0"
     ),
     paths(),
     components(schemas()),
-    security(),
+    security()
 )]
 pub struct UsOpenApi;

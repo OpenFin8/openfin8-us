@@ -39,9 +39,7 @@ async fn main() -> anyhow::Result<()> {
 /// Shield gates `bank8:open-us:*`, admin UI pages, SQL migrations)
 /// lands with the OBARCH-1 extraction; the shape follows the
 /// `bank8-fdx` registration (renamed).
-fn print_registration_stub(
-    section: Option<String>,
-) -> anyhow::Result<()> {
+fn print_registration_stub(section: Option<String>) -> anyhow::Result<()> {
     // Placeholder until the registration module lands (OBARCH-3).
     let _ = section;
     Ok(())
