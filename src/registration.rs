@@ -75,7 +75,7 @@ const M2M_GRANTS: &[M2mGrant] = &[
         workload: "open-us-policy",
         scopes: &["sentin8:stat:measure"],
     },
-    // VDC-4 tenant-snapshot API workload (design/sentin8-vertical-data-
+    // tenant-snapshot API workload (design/sentin8-vertical-data-
     // plane-contract.md §VDC.5): the env-init consumer fetches tenant
     // identity (`GET /v1/tenants/{env_id}`) for issuer/callback derivation.
     M2mGrant {
@@ -99,7 +99,7 @@ const M2M_GRANTS: &[M2mGrant] = &[
             "bank8:payments:payments:write",
         ],
     },
-    // TLS-RLS-4 (design/sentin8-vertical-data-plane-contract.md §VDC.7):
+    // (design/sentin8-vertical-data-plane-contract.md §VDC.7):
     // the database-free HostContextResolver’s resolve workload - cache
     // miss calls Sys `GET /v1/resolve/hostname`.
     M2mGrant {

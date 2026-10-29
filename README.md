@@ -89,7 +89,7 @@ the kernel surface under the US identity (see `DESIGN.md` §3-§6).
 make help     # the available targets
 make build    # cargo build
 make test     # cargo test
-make lint     # cargo fmt -- --check
+make lint     # cargo fmt -check
 make start    # infra + trimmed boot if captain is down
 make status   # fleet rows for openfin8:us
 make enroll   # register this repo (composable enrollment, RS §6)
