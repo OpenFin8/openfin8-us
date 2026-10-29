@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //! Sentin8 OpenFin8:US - US open banking: the FDX v6.x
-//! provider/recipient wire. See `DESIGN.md` (OBARCH-3). This service
+//! provider/recipient wire. See `DESIGN.md`). This service
 //! is the in-place successor of the retired bank8-fdx service.
 //!
 //! This is a THIN COUNTRY ADAPTER (the design's no-fork guarantee):
@@ -16,7 +16,7 @@
 //! `OPENFIN8_US_VERSION`), its registration data
 //! (`registration.rs`), and its published-spec policy (`openapi.rs` -
 //! OpenFin8-owned routes only; the FDX API specification is licensed and
-//! never published here, OBARCH-2).
+//! never published here,).
 
 use utoipa::OpenApi;
 

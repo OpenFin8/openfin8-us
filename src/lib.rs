@@ -5,7 +5,7 @@
 
 //! Library target for the openfin8-us adapter: the registration and
 //! spec modules for the US profile. The implementation itself lives in
-//! `openfin8-core` (shared with openfin8-ca - OBARCH-3/4);
+//! `openfin8-core` (shared with openfin8-ca -/4);
 //! integration tests run from the core crate.
 
 pub mod openapi;

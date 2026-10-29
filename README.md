@@ -27,7 +27,7 @@ records - the bank its grant ledger, the fintech its connection
 registry (the two-ledger model).
 
 The service embeds [`openfin8-core`](https://github.com/OpenFin8/openfin8-core) - the
-jurisdiction-agnostic kernel (OBARCH-1) - and supplies the US FDX
+jurisdiction-agnostic kernel - and supplies the US FDX
 profile, the FDX ceremony (DCR + PAR + PKCE + DPoP), and the FDX
 provider router. The Canadian and UK adapters
 ([`bank8-open-ca`](https://github.com/OpenFin8/openfin8-ca), [`bank8-open-uk`](https://github.com/OpenFin8/openfin8-uk))
@@ -73,16 +73,15 @@ graph TD
     WIRE -- "initiation" --> PAY
 ```
 
-Read [`DESIGN.md`](https://github.com/OpenFin8/openfin8-us/blob/main/DESIGN.md) (OBARCH-3) for the full design: the
+Read [`DESIGN.md`](https://github.com/OpenFin8/openfin8-us/blob/main/DESIGN.md) for the full design: the
 rename inventory from bank8-fdx, the version-configurable route
 contract, and the spec-publication policy.
 
-## Status
+## The served surface
 
-**Skeleton** - the trait-shaped binary boots on the sentin8 shell
-with a stub registration; the OBARCH-1 core extraction lands first,
-then this service takes the extracted FDX wire handlers, the
-version-parameterized mounts, and the renamed registration.
+The FDX wire handlers, the version-parameterized mounts
+(`/fdx/v{major}` from `OPENFIN8_US_VERSION`), and the registration -
+the kernel surface under the US identity (see `DESIGN.md` §3-§6).
 
 ## Development
 

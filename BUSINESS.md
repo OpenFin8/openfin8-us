@@ -2,7 +2,7 @@
 
 > Audience: product owners, business analysts, and anyone evaluating what
 > the US adapter **does for the business**. For architecture read
-> `README.md`; for wire-level detail read `DESIGN.md` (OBARCH-3).
+> `README.md`; for wire-level detail read `DESIGN.md`.
 
 ## 1. Business Purpose
 

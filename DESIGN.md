@@ -1,13 +1,9 @@
 # openfin8-us - Detailed Design Document
 
-> Status: **PROPOSED** - the FDX data-provider service for the United
-> States (OBARCH-3). This is the in-place successor of `bank8-fdx`
-> (design docs `bank8-fdx/DESIGN.md` remain the historical reference;
-> where this document says "unchanged", the fdx behavior carries
-> forward). Depends on: `openfin8-core` (OBARCH-1) for the consent
-> ledger, recipient registry, CSDF, notifications, and admin
-> framework. See also `bank8-open-ca` (the Canadian FDX/CDX profile of
-> the same wire) and `bank8-open-uk`.
+> The FDX data-provider service for the United States. Depends on:
+> `openfin8-core` for the consent ledger, recipient registry, CSDF,
+> notifications, and admin framework. See also `openfin8-ca` (the
+> Canadian FDX/CDX profile of the same wire) and `openfin8-uk`.
 
 ## 1. Scope & Context
 
@@ -40,7 +36,7 @@ flow, the middleware chokepoint, and the failure modes are all
 **unchanged** from `bank8-fdx/DESIGN.md` §1-§8 - those sections
 remain normative for this service.
 
-**What changes beyond the rename** (the OBARCH-2/3 deltas):
+**Version configurability and the mount contract**:
 
 1. **Version configurability** - the six hardcoded `v6`/`"6.5"`
    strings become `OPENFIN8_US_VERSION`-driven (default `6.5`):
@@ -166,7 +162,7 @@ profile config), defaulting to the configured one.
 ## 5. Data Model
 
 Schema `openfin8_us` (renamed from `fdx`): the 15 core tables move to
-`openfin8-core` SQL (OBARCH-1 §3) parameterized by schema; the fdx
+`openfin8-core` SQL parameterized by schema; the fdx
 → openfin8_us migration is a schema rename + the column generalizations
 (`fdx_version` → `standard_version`). No US-specific tables are
 added. The `consents.intent_payload` column stays NULL for FDX
@@ -185,9 +181,9 @@ consents (FDX has no intent document between creation and grant).
   `OPENFIN8_US_BASE_URL`, `OPENFIN8_US_VERSION`,
   `OPENFIN8_US_STREAM_FAMILY` (default `open-us`), plus the
   platform-standard variables. Per-env overrides ride
-  `sys.services.config` (OBARCH-1 §6 precedence).
+  `sys.services.config` ( precedence).
 
-## 7. Spec Publication (OBARCH-2)
+## 7. Spec Publication
 
 - Published `docs/openapi.json`: bank8-owned routes only
   (utoipa-derived; the `/fdx/*` annotations move out of the
@@ -206,7 +202,7 @@ consents (FDX has no intent document between creation and grant).
 Carried from `bank8-fdx/DESIGN.md` §5-§9 unchanged (consent
 middleware chokepoint, terminal revocation, secret references,
 same-transaction discipline, no cross-tenant SQL). New: the profile
-isolation invariant (OBARCH-1 §8) - the US binary mounts no UK/CA
+isolation invariant - the US binary mounts no UK/CA
 routes by construction. Testing: the existing `bank8-e2e` recipient
 journey retargets to the renamed service; unit tests for the route
 contract derive from `FDX_ROUTES` data instead of inline arrays.
