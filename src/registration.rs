@@ -264,14 +264,16 @@ const SQL_1_INIT: &str = include_str!("../sql/init.sql");
 // tenant-visibility policies to it, so the cross-env catalog read saw
 // nothing and the provider observation returned an empty list. The block
 // strips the table's RLS (and any policies) idempotently; the v1 init.sql
-// carries the same convergent statements for fresh clusters.
+// carries the same convergent statements for fresh clusters. The schema
+// is open_ca (the service's own schema-per-service; sql/init.sql is the
+// single schema source - the retired bank8-fdx schema name is gone).
 const SQL_2_PROVIDER_CATALOG_NO_RLS: &str = r#"
-ALTER TABLE fdx.provider_profiles NO FORCE ROW LEVEL SECURITY;
-ALTER TABLE fdx.provider_profiles DISABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS provider_profiles_select ON fdx.provider_profiles;
-DROP POLICY IF EXISTS provider_profiles_insert ON fdx.provider_profiles;
-DROP POLICY IF EXISTS provider_profiles_update ON fdx.provider_profiles;
-DROP POLICY IF EXISTS provider_profiles_delete ON fdx.provider_profiles;
+ALTER TABLE open_ca.provider_profiles NO FORCE ROW LEVEL SECURITY;
+ALTER TABLE open_ca.provider_profiles DISABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS provider_profiles_select ON open_ca.provider_profiles;
+DROP POLICY IF EXISTS provider_profiles_insert ON open_ca.provider_profiles;
+DROP POLICY IF EXISTS provider_profiles_update ON open_ca.provider_profiles;
+DROP POLICY IF EXISTS provider_profiles_delete ON open_ca.provider_profiles;
 "#;
 
 const AUDIT_FINDINGS: &[AuditFinding] = &[
