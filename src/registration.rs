@@ -276,6 +276,25 @@ DROP POLICY IF EXISTS provider_profiles_update ON open_ca.provider_profiles;
 DROP POLICY IF EXISTS provider_profiles_delete ON open_ca.provider_profiles;
 "#;
 
+// Role-grant convergence (F1 - §4.3e): the v1 init grant block targeted the
+// RETIRED bank8-fdx role name, so the service's own role (openfin8_us_service,
+// the registration's pg_roles declaration) held NO schema/table grants and
+// the search_path stayed at the enroll default (not this schema). Idempotent
+// - safe on fresh and drifted databases alike.
+const SQL_3_ROLE_GRANTS: &str = r#"
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'openfin8_us_service') THEN
+        ALTER ROLE openfin8_us_service SET search_path = open_ca, public;
+        GRANT USAGE ON SCHEMA open_ca TO openfin8_us_service;
+        GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA open_ca
+            TO openfin8_us_service;
+        GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA open_ca
+            TO openfin8_us_service;
+    END IF;
+END $$;
+"#;
+
 const AUDIT_FINDINGS: &[AuditFinding] = &[
     AuditFinding {
         finding: "Integration credentials stored without a secret reference",
@@ -359,6 +378,11 @@ pub fn print(section: Option<String>) -> anyhow::Result<()> {
                 version: 2,
                 name: "provider_catalog_no_rls",
                 sql: SQL_2_PROVIDER_CATALOG_NO_RLS,
+            },
+            SqlMigration {
+                version: 3,
+                name: "role_grants",
+                sql: SQL_3_ROLE_GRANTS,
             },
         ],
         audit_findings: Some(AUDIT_FINDINGS),
