@@ -30,8 +30,8 @@ The service embeds [`openfin8-core`](https://github.com/OpenFin8/openfin8-core) 
 jurisdiction-agnostic kernel - and supplies the US FDX
 profile, the FDX ceremony (DCR + PAR + PKCE + DPoP), and the FDX
 provider router. The Canadian and UK adapters
-([`bank8-open-ca`](https://github.com/OpenFin8/openfin8-ca), [`bank8-open-uk`](https://github.com/OpenFin8/openfin8-uk))
-follow the same contract.
+([`openfin8-ca`](https://github.com/OpenFin8/openfin8-ca),
+[`openfin8-uk`](https://github.com/OpenFin8/openfin8-uk)) follow the same contract.
 
 ## Motivation
 

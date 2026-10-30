@@ -1,14 +1,14 @@
 -- SPDX-FileCopyrightText: Copyright Logically Magic Inc. <hello@logicallymagic.com>
 -- SPDX-FileCopyrightText: Copyright Hamid Jahanzad <Hamid@Jahanzad.com>
--- SPDX-FileCopyrightText: Copyright Contributors to the Bank8:OpenCA
+-- SPDX-FileCopyrightText: Copyright Contributors to the OpenFin8:US
 -- SPDX-License-Identifier: Apache-2.0
 
--- Bank8:OpenCA - the service's own schema `open_ca` (schema-per-service):
+-- OpenFin8:US - the service's own schema `open_ca` (schema-per-service):
 -- open_ca_* domain tables + open_ca.outbox / open_ca.audit_journal producer tables,
 -- all FORCE-RLS env-scoped (provider_profiles is the public cross-env
 -- catalog - no RLS by design).
 --
--- TWO LEDGERS (bank8-open-ca DESIGN.md §1): the provider's GRANT ledger
+-- TWO LEDGERS (openfin8-ca DESIGN.md §1): the provider's GRANT ledger
 -- (`open_ca.consents` - seeded from sentin8:auth:grant:created) lives in the
 -- provider tenant; the recipient's REGISTRY (`open_ca.recipient_consents` +
 -- `open_ca.recipients`) lives in the recipient tenant. The OAuth client
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS open_ca.consents (
 CREATE INDEX IF NOT EXISTS idx_open_ca_consents_env ON open_ca.consents (env_id);
 CREATE INDEX IF NOT EXISTS idx_open_ca_consents_customer ON open_ca.consents (customer_id);
 
--- Bank8:OpenCA consent resources - per-account grants within a consent.
+-- OpenFin8:US consent resources - per-account grants within a consent.
 -- Per FDX Consent API Specification v1.0 §4.2, a ConsentGrant enumerates
 -- the permissioned resources (accounts) with their data clusters. This
 -- table stores the per-account grants so the recipient API can filter
@@ -70,7 +70,7 @@ CREATE INDEX IF NOT EXISTS idx_open_ca_consent_resources_consent
 CREATE INDEX IF NOT EXISTS idx_open_ca_consent_resources_resource
     ON open_ca.consent_resources (resource_type, resource_id);
 
--- Bank8:OpenCA provider profiles - the recipient-side directory of providers
+-- OpenFin8:US provider profiles - the recipient-side directory of providers
 -- (the cross-env catalog). Registered by env-init; the recipient app
 -- lists providers from it. Carries NO recipient/OAuth-client material -
 -- the recipient's client is registered at the provider's AS by the
@@ -91,8 +91,8 @@ CREATE TABLE IF NOT EXISTS open_ca.provider_profiles (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_open_ca_provider_profiles_env_name
     ON open_ca.provider_profiles (env_id, provider_name);
 
--- Bank8:OpenCA recipient client registrations - the RECIPIENT's per-provider
--- OAuth client cache (two-ledger model, bank8-open-ca DESIGN.md §1). One row per
+-- The openfin8:us recipient client registrations - the RECIPIENT's per-provider
+-- OAuth client cache (two-ledger model, openfin8-ca DESIGN.md §1). One row per
 -- (recipient env, provider): the public client the recipient registered
 -- at the provider's authorization server via DCR (RFC 7591), the redirect
 -- URI registered for it, and the sealed DPoP key the recipient uses for
@@ -115,7 +115,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_open_ca_recipients_env_provider
     ON open_ca.recipients (env_id, provider_id);
 
 -- The RECIPIENT consent registry - the fintech's own bookkeeping of its
--- customers' bank connections (two-ledger model, bank8-open-ca DESIGN.md §1).
+-- customers' bank connections (two-ledger model, openfin8-ca DESIGN.md §1).
 -- Written by the recipient-side consent-start (pending) and OAuth callback
 -- (active) surfaces; read by the fintech app's Connections/Accounts pages.
 -- The PKCE verifier and delegated provider tokens live HERE - the recipient
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS open_ca.recipient_consents (
 CREATE INDEX IF NOT EXISTS idx_open_ca_recipient_consents_env ON open_ca.recipient_consents (env_id);
 CREATE INDEX IF NOT EXISTS idx_open_ca_recipient_consents_customer ON open_ca.recipient_consents (customer_id);
 
--- Bank8:OpenCA audit events
+-- OpenFin8:US audit events
 CREATE TABLE IF NOT EXISTS open_ca.audit_events (
     id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     env_id      UUID,
@@ -157,8 +157,8 @@ CREATE TABLE IF NOT EXISTS open_ca.audit_events (
     schema_version      TEXT NOT NULL DEFAULT '1.0'
 );
 
--- ── RLS: Bank8:OpenCA tenant isolation (Story 12.4.36) ──────────────────────
--- All Bank8:OpenCA tables with env_id are tenant-scoped. The Delegation
+-- ── RLS: OpenFin8:US tenant isolation (Story 12.4.36) ──────────────────────
+-- All OpenFin8:US tables with env_id are tenant-scoped. The Delegation
 -- Gateway ensures tokens carry the target env, so RLS naturally
 -- scopes to the right tenant. env_id is the sole tenant key
 -- (architecture-principles.md §4.3).
@@ -184,7 +184,7 @@ CREATE POLICY consents_delete ON open_ca.consents FOR DELETE
 
 -- open_ca.provider_profiles: explicitly NO RLS - it is a PUBLIC cross-env
 -- registry (the recipient catalog: any environment's caller discovers any
--- active provider; bank8-open-ca design §4.3c). The tenant-visibility FORCE-RLS pattern
+-- active provider; openfin8-ca design §4.3c). The tenant-visibility FORCE-RLS pattern
 -- must NOT apply here - with it, the cross-env catalog read saw nothing and
 -- the provider observation poll returned an empty list. The idempotent
 -- statements below REMOVE any policy a prior blanket pass may have applied
