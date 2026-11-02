@@ -4,8 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //! Sentin8 OpenFin8:US - US open banking: the FDX v6.x
-//! provider/recipient wire. See `DESIGN.md`). This service
-//! is the in-place successor of the retired bank8-fdx service.
+//! provider/recipient wire (see `DESIGN.md`).
 //!
 //! This is a THIN COUNTRY ADAPTER (the design's no-fork guarantee):
 //! the entire implementation lives in `openfin8-core`, shared

@@ -74,8 +74,7 @@ graph TD
 ```
 
 Read [`DESIGN.md`](https://github.com/OpenFin8/openfin8-us/blob/main/DESIGN.md) for the full design: the
-rename inventory from bank8-fdx, the version-configurable route
-contract, and the spec-publication policy.
+version-configurable route contract, and the spec-publication policy.
 
 ## The served surface
 

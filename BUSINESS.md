@@ -7,8 +7,7 @@
 ## 1. Business Purpose
 
 OpenFin8:US is **US open banking**: the FDX v6.x wire for the United
-States market - the in-place successor of the retired bank8-fdx
-service. It delivers:
+States market. It delivers:
 
 - **The identical served surface** as the Canadian adapter - accounts,
   transactions, statements, customers, consents, money movement,
@@ -117,8 +116,8 @@ enablement, Flow steps).
 
 - Build + tests green (publication guard included); CI green on the
   OpenFin8 org.
-- The served surface matches the predecessor (bank8-fdx) under the US
-  identity - verified during the migration.
+- The served surface is the US open-banking provider contract under the
+  US identity.
 - Independent enablement proven: enabling/disabling `openfin8:us`
   never affects an `openfin8:ca` deployment.
 

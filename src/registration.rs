@@ -266,7 +266,7 @@ const SQL_1_INIT: &str = include_str!("../sql/init.sql");
 // strips the table's RLS (and any policies) idempotently; the v1 init.sql
 // carries the same convergent statements for fresh clusters. The schema
 // is open_ca (the service's own schema-per-service; sql/init.sql is the
-// single schema source - the retired bank8-fdx schema name is gone).
+// single schema source).
 const SQL_2_PROVIDER_CATALOG_NO_RLS: &str = r#"
 ALTER TABLE open_ca.provider_profiles NO FORCE ROW LEVEL SECURITY;
 ALTER TABLE open_ca.provider_profiles DISABLE ROW LEVEL SECURITY;
@@ -276,11 +276,10 @@ DROP POLICY IF EXISTS provider_profiles_update ON open_ca.provider_profiles;
 DROP POLICY IF EXISTS provider_profiles_delete ON open_ca.provider_profiles;
 "#;
 
-// Role-grant convergence (F1 - §4.3e): the v1 init grant block targeted the
-// RETIRED bank8-fdx role name, so the service's own role (openfin8_us_service,
-// the registration's pg_roles declaration) held NO schema/table grants and
-// the search_path stayed at the enroll default (not this schema). Idempotent
-// - safe on fresh and drifted databases alike.
+// Role-grant convergence (F1 - §4.3e): the service's own role
+// (openfin8_us_service, the registration's pg_roles declaration) must hold the
+// schema/table grants; this block converges them and the search_path to this
+// schema. Idempotent - safe on fresh and drifted databases alike.
 const SQL_3_ROLE_GRANTS: &str = r#"
 DO $$
 BEGIN

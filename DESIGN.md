@@ -17,24 +17,23 @@ used by eFinTech-style apps. It embeds `openfin8-core` and supplies
 exactly three things: the FDX profile descriptor, the FDX ceremony
 implementation, and the FDX provider router.
 
-**The rename, concretely** (all shipped as one atomic change):
+**The service identity, concretely:**
 
-| Today (bank8-fdx) | After (openfin8-us) |
+| Aspect | Value |
 |---|---|
-| `service_type: bank8:fdx` | `service_type: openfin8:us` |
-| env prefix `BANK8_FDX_*` | `OPENFIN8_US_*` |
-| schema `fdx` | schema `openfin8_us` (SQL data migration) |
-| event family `fdx` → `bank8:fdx:*` | `openfin8:us:*` |
-| stream family `fdx` | `open-us` |
-| subdomain `bank8-fdx` | `openfin8-us` |
-| telemetry property | slug `open-us` |
-| Shield gates `bank8:fdx:...` | `openfin8:us:...` |
+| `service_type` | `openfin8:us` |
+| env prefix | `OPENFIN8_US_*` |
+| schema | `openfin8_us` |
+| event family | `openfin8:us:*` |
+| stream family | `open-us` |
+| subdomain | `openfin8-us` |
+| telemetry slug | `open-us` |
+| Shield gates | `openfin8:us:...` |
 
 The two-ledger model, the grant-ledger seeding from
 `sentin8:auth:grant:created`, the DCR-at-consent-start recipient
-flow, the middleware chokepoint, and the failure modes are all
-**unchanged** from `bank8-fdx/DESIGN.md` §1-§8 - those sections
-remain normative for this service.
+flow, the middleware chokepoint, and the failure modes are
+**normative** for this service (§3/§8 below).
 
 **Version configurability and the mount contract**:
 
@@ -136,17 +135,17 @@ knows the string "fdx".
 DCR (RFC 7591) direct at the provider's AS with DPoP sender
 constrained tokens, PAR (RFC 9126) + PKCE (RFC 7636), token
 exchange with DPoP proof - the existing `tokens.rs` /
-recipient-start flow. The implementation moves to the
+recipient-start flow. The implementation is the
 `ConsentCeremony` impl over core's `CeremonyCtx` (auth client,
-secrets resolution, pool); behavior is byte-identical to
-`bank8-fdx/DESIGN.md` §4 consent flow. No JWS request signing (that
+secrets resolution, pool); the consent flow follows §3 below. No JWS
+request signing (that
 is UK/BR territory), no mTLS client cert beyond the platform's
 standard workload TLS.
 
 ## 4. API Surface (unchanged families, versioned mounts)
 
-The provider surface keeps every family from
-`bank8-fdx/DESIGN.md` §4 - accounts (+ statements 302→Storage,
+The provider surface covers every family -
+accounts (+ statements 302→Storage,
 payment-networks + revocation), customers, consents (introspection,
 revocation, lifecycle), money movement (transfers, payments, payees,
 recurring), PIP, notification subscriptions + feed, discovery
@@ -170,11 +169,10 @@ consents (FDX has no intent document between creation and grant).
 
 ## 6. Registration & Configuration
 
-- `service-registration.json` (vertical bank8): service_type
-  `openfin8:us`, subdomain `openfin8-us`; policy sets/gates
-  renamed from `bank8:fdx:*` to `openfin8:us:*`; the consent
-  provider/flow entries (OAuth profile flags at Auth) unchanged in
-  shape.
+- `service-registration.json` (openfin8 vertical): service_type
+  `openfin8:us`, subdomain `openfin8-us`; policy sets/gates under
+  `openfin8:us:*`; the consent provider/flow entries (OAuth profile
+  flags at Auth) unchanged in shape.
 - `catalog.json`: binary `openfin8-us`, database env var
   `OPENFIN8_US_DATABASE_URL`.
 - Env: `OPENFIN8_US_PORT`, `OPENFIN8_US_DATABASE_URL`,
@@ -199,11 +197,11 @@ consents (FDX has no intent document between creation and grant).
 
 ## 8. Failure Modes / Invariants / Testing
 
-Carried from `bank8-fdx/DESIGN.md` §5-§9 unchanged (consent
-middleware chokepoint, terminal revocation, secret references,
-same-transaction discipline, no cross-tenant SQL). New: the profile
+Consent middleware chokepoint, terminal revocation, secret
+references, same-transaction discipline, no cross-tenant SQL. New: the
+profile
 isolation invariant - the US binary mounts no UK/CA
-routes by construction. Testing: the existing `bank8-e2e` recipient
+routes by construction. Testing: the recipient
 journey retargets to the renamed service; unit tests for the route
 contract derive from `FDX_ROUTES` data instead of inline arrays.
 
