@@ -10,8 +10,6 @@ use sentin8::registration::{
     AdminScope, AdminUi, AdminUiPage, AuditFinding, ErrorCode, M2mGrant, PgRole, PolicySetDecl,
     Registration, RelationDecl, ServiceActionEntry, SqlMigration,
 };
-use utoipa::OpenApi;
-
 const PG_ROLES: &[PgRole] = &[PgRole {
     scope: "openfin8:us:read,openfin8:us:write",
     role: "openfin8_us_service",
@@ -337,9 +335,6 @@ fn consent_flows_json() -> Vec<serde_json::Value> {
     })]
 }
 
-fn openapi_spec() -> serde_json::Value {
-    serde_json::to_value(crate::openapi::UsOpenApi::openapi()).unwrap_or(serde_json::Value::Null)
-}
 
 /// Print the registration JSON to stdout.
 pub fn print(section: Option<String>) -> anyhow::Result<()> {
@@ -349,6 +344,14 @@ pub fn print(section: Option<String>) -> anyhow::Result<()> {
         Box::leak(consent_providers_json().into_boxed_slice());
     let consent_flows: &'static [serde_json::Value] =
         Box::leak(consent_flows_json().into_boxed_slice());
+        // The utoipa dump lives OUTSIDE this file (OPENAPI_DUMP static in
+    // main.rs/lib.rs): test harnesses embedding this file via #[path] carry
+    // neither the static nor the openapi module and never print a spec.
+    #[cfg(not(test))]
+    let dump: fn() -> serde_json::Value = crate::OPENAPI_DUMP;
+    #[cfg(test)]
+    let dump: fn() -> serde_json::Value = || serde_json::Value::Null;
+
     let reg = Registration {
         service_type: "openfin8:us",
         subdomain: "openfin8-us",
@@ -389,7 +392,7 @@ pub fn print(section: Option<String>) -> anyhow::Result<()> {
         m2m_grants: Some(M2M_GRANTS),
         pg_roles: PG_ROLES,
         openapi_url: "/openapi.json",
-        openapi: openapi_spec,
+        openapi: dump,
     };
-    sentin8::registration::print_registration(section, &reg, openapi_spec)
+    sentin8::registration::print_registration(section, &reg, dump)
 }
